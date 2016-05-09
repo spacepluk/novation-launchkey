@@ -33,14 +33,14 @@ function flushOutputState()
       if (pendingLedstate[i] != ledstate[i])
       {
          ledstate[i] = pendingLedstate[i];
-         host.getMidiOutPort(1).sendMidi(0x90, 96 + i, ledstate[i]);
+         host.getMidiOutPort(1).sendMidi(0x9f, 0x70 + i, ledstate[i]);
       }
 
       var j = i + 9;
       if (pendingLedstate[j] != ledstate[j])
       {
          ledstate[j] = pendingLedstate[j];
-         host.getMidiOutPort(1).sendMidi(0x90, 112 + i, ledstate[j]);
+         host.getMidiOutPort(1).sendMidi(0x9f, 0x60 + i, ledstate[j]);
       }
    }
 }

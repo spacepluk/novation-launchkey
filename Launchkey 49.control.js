@@ -1,17 +1,16 @@
 
 loadAPI(1);
 
-host.defineController("Novation", "Launchkey 49", "1.0", "45108550-9E02-11E2-9E96-D0AA527BA73A");
+host.defineController("Novation", "Launchkey MK2 49", "1.0", "EAF852AE-39C3-40D4-A085-27E6344AB2F2");
 host.defineMidiPorts(2, 2);
-host.addDeviceNameBasedDiscoveryPair(["Launchkey 49", "MIDIIN2 (Launchkey 49)"], ["Launchkey 49", "MIDIOUT2 (Launchkey 49)"]);
-host.addDeviceNameBasedDiscoveryPair(["Launchkey 49 MIDI 1", "Launchkey 49 MIDI 2"], ["Launchkey 49 MIDI 1", "Launchkey 49 MIDI 2"]); 
+host.addDeviceNameBasedDiscoveryPair(["Launchkey MK2 49 MIDI 1", "Launchkey MK2 49 MIDI 2"], ["Launchkey MK2 49 MIDI 1", "Launchkey MK2 49 MIDI 2"]);
 
 load("launchkey_common.js");
 
 function init()
 {
-   host.getMidiInPort(0).createNoteInput("Launchkey 49", "80????", "90????", "B001??", "B040??", "D0????", "E0????");
-   host.getMidiInPort(0).createNoteInput("Launchkey Pads", "89????", "99????");
+   host.getMidiInPort(0).createNoteInput("Launchkey MK2 49", "80????", "90????", "B001??", "B040??", "D0????", "E0????");
+   host.getMidiInPort(0).createNoteInput("Launchkey MK2 Pads", "89????", "99????");
 
    host.getMidiInPort(0).setMidiCallback(onMidi0);
    host.getMidiInPort(1).setMidiCallback(onMidi1);
@@ -48,8 +47,8 @@ function init()
       userControls.getControl(p).setLabel("User " + (p + 1));
    }
 
-   sendMidi(0x90, 0x0C, 0x7F);
-   host.getMidiOutPort(1).sendMidi(0x90, 0x0C, 0x7F);
+   sendMidi(0x9f, 0x0C, 0x7F);
+   host.getMidiOutPort(1).sendMidi(0x9f, 0x0C, 0x7F);
 
    updateIndications();
 
@@ -85,7 +84,7 @@ function updateIndications()
 
 function exit()
 {
-   sendMidi(0x90, 0x0C, 0x00);
+   sendMidi(0x9f, 0x0C, 0x00);
 }
 
 function flush()
@@ -217,17 +216,17 @@ function onMidi1(status, data1, data2)
       }
    }
 
-   if (MIDIChannel(status) == 0 && isNoteOn(status))
+   if (MIDIChannel(status) == 15 && isNoteOn(status))
    {
       if (data1 >= 96 && data1 < 104)
       {
          var i = data1 - 96;
-         primaryDevice.setParameterPage(i);
+         primaryDevice.getModulationSource(i).toggleIsMapping();
       }
       else if (data1 >= 112 && data1 < 120)
       {
          var i = data1 - 112;
-         primaryDevice.getModulationSource(i).toggleIsMapping();
+         primaryDevice.setParameterPage(i);
       }
       else if (data1 == 104)
       {
